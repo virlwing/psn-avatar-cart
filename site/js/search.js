@@ -70,20 +70,22 @@ function card(item) {
   const art = imageUrl(item);
 
   const article = document.createElement('article');
-  article.className = 'card overflow-hidden border border-white/5 bg-base-200 transition hover:border-white/15';
+  article.className = 'card card-compact overflow-hidden border border-white/10 bg-base-200 shadow-md transition hover:border-primary/40';
   article.innerHTML = `
-    ${art ? `<img class="card-avatar" src="${esc(art)}" alt="" loading="lazy" referrerpolicy="no-referrer">`
-          : '<div class="card-avatar"></div>'}
+    <figure class="bg-base-300">
+      ${art ? `<img class="card-avatar" src="${esc(art)}" alt="" loading="lazy" referrerpolicy="no-referrer">`
+            : '<div class="card-avatar"></div>'}
+    </figure>
     <div class="card-body gap-2 p-4">
       <h3 class="line-clamp-2 min-h-[2.4rem] text-sm font-semibold leading-snug">${esc(item.name || '(unnamed)')}</h3>
-      <p class="flex items-center justify-between gap-2 text-[11px] text-base-content/45">
-        <span>${esc(platform)}</span>
-        <span class="font-mono text-base-content/75">${esc(price || '—')}</span>
-      </p>
-      <code class="truncate font-mono text-[10px] text-base-content/35">${esc(base)}</code>
-      <div class="mt-1 flex gap-2">
+      <div class="flex items-center justify-between gap-2">
+        <span class="badge badge-outline badge-xs font-mono">${esc(platform || 'PS3')}</span>
+        <span class="badge badge-primary badge-outline badge-sm font-mono">${esc(price || '—')}</span>
+      </div>
+      <code class="truncate font-mono text-[10px] text-base-content/40">${esc(base)}</code>
+      <div class="card-actions mt-1 flex gap-2">
         <a class="btn btn-primary btn-xs flex-1" href="${esc(link)}" target="_blank" rel="noopener noreferrer">Add to cart ↗</a>
-        <button class="btn btn-ghost btn-xs" type="button">Copy link</button>
+        <button class="btn btn-outline btn-xs border-white/15" type="button">Copy link</button>
       </div>
     </div>`;
   article.querySelector('button').addEventListener('click', async (event) => {

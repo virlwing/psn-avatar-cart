@@ -38,13 +38,13 @@ export function renderMessage(node, text, kind = 'info') {
 }
 
 export function renderEmpty(card) {
-  card.className = 'rounded-box border border-dashed border-white/10 bg-base-300/30';
+  card.className = 'rounded-box border border-dashed border-white/15 bg-base-300/30';
   card.innerHTML = `
-    <div class="flex flex-col gap-1 p-6">
+    <div class="flex flex-col items-start gap-2 p-6">
       <strong class="text-sm">Nothing resolved yet</strong>
       <span class="text-sm text-base-content/60">
         Pick your store region, then paste a PSNA hash or SKU — or open a ${code('.edat')} file.
-        Try <button class="link link-primary link-hover" id="example" type="button">an example</button>.
+        Try <button class="btn btn-primary btn-xs btn-outline ml-1" id="example" type="button">an example</button>.
       </span>
     </div>`;
   card.querySelector('#example')?.addEventListener('click', async (event) => {
@@ -61,31 +61,39 @@ export function renderEmpty(card) {
 }
 
 export function renderCard(card, data, note, handlers) {
-  card.className = 'card border border-white/5 bg-base-300/40';
+  card.className = 'card border border-white/10 bg-base-300/60 shadow-lg';
   const source = data.twinOf
     ? `Same avatar as “${data.twinOf}” (${data.twinHome} listing)`
     : [data.game, data.source].filter(Boolean).join(' · ');
 
   card.innerHTML = `
-    <div class="card-body gap-4">
+    <div class="card-body gap-4 p-5">
       ${note ? `<div class="alert alert-info py-2 text-xs">${esc(note)}</div>` : ''}
-      <div class="flex flex-col gap-4 sm:flex-row">
-        ${data.image
-          ? `<img class="h-28 w-28 shrink-0 rounded-box border border-white/5 object-cover" src="${esc(data.image)}" alt="" loading="lazy" referrerpolicy="no-referrer">`
-          : '<div class="h-28 w-28 shrink-0 rounded-box border border-white/5 bg-base-300"></div>'}
-        <div class="flex min-w-0 flex-col gap-1">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div class="avatar shrink-0">
+          <div class="h-28 w-28 rounded-box bg-base-200 ring-1 ring-white/15">
+            ${data.image
+              ? `<img src="${esc(data.image)}" alt="" loading="lazy" referrerpolicy="no-referrer">`
+              : ''}
+          </div>
+        </div>
+        <div class="flex min-w-0 flex-1 flex-col gap-1.5">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="badge badge-outline badge-xs font-mono">${esc(data.platform)}</span>
+            <span class="badge badge-neutral badge-xs font-mono">${esc(data.region)}</span>
+          </div>
           <h3 class="truncate text-lg font-semibold leading-tight">${esc(data.name)}</h3>
-          <p class="text-xs text-base-content/55">${esc(data.platform)} · ${esc(data.region)}</p>
-          <p class="text-2xl font-semibold ${data.price === 'Free' ? 'text-success' : 'text-primary'}">${esc(data.price)}</p>
-          <p class="truncate font-mono text-[11px] text-base-content/45">${esc(data.baseSku)}</p>
-          <p class="text-xs text-base-content/45">${esc(source)}</p>
+          <p class="text-2xl font-bold ${data.price === 'Free' ? 'text-success' : 'text-primary'}">${esc(data.price)}</p>
+          <code class="truncate font-mono text-[11px] text-base-content/50">${esc(data.baseSku)}</code>
+          ${source ? `<p class="text-xs text-base-content/50">${esc(source)}</p>` : ''}
         </div>
       </div>
+      <div class="divider my-0 opacity-30"></div>
       <div class="flex flex-wrap items-center gap-2">
         <a class="btn btn-primary btn-sm" href="${esc(data.link)}" target="_blank" rel="noopener noreferrer">Add to cart ↗</a>
-        <button class="btn btn-ghost btn-sm" type="button" data-act="copy">Copy cart link</button>
+        <button class="btn btn-outline btn-sm border-white/15" type="button" data-act="copy">Copy cart link</button>
         <button class="btn btn-ghost btn-sm" type="button" data-act="share">Copy page link</button>
-        <span class="text-[11px] text-base-content/40">Opens Sony's checkout — be signed in to your PlayStation account.</span>
+        <span class="text-[11px] text-base-content/45">Opens Sony's checkout — be signed in to your PlayStation account.</span>
       </div>
     </div>`;
 
@@ -147,14 +155,14 @@ export function renderRegionRows(tbody, rows, regionNames, now = Date.now()) {
     const label = regionNames[row.region] || row.region;
 
     let status;
-    if (row.status === 'checking') status = '<span class="badge badge-ghost badge-sm">checking…</span>';
-    else if (row.status === 'yes') status = '<span class="badge badge-success badge-sm">sold</span>';
-    else if (row.status === 'twin') status = '<span class="badge badge-warning badge-sm">same avatar</span>';
+    if (row.status === 'checking') status = '<span class="badge badge-ghost badge-sm gap-1"><span class="loading loading-spinner loading-xs"></span>checking</span>';
+    else if (row.status === 'yes') status = '<span class="badge badge-success badge-sm font-medium">sold</span>';
+    else if (row.status === 'twin') status = '<span class="badge badge-warning badge-sm font-medium">same avatar</span>';
     else status = '<span class="badge badge-sm border-white/10 bg-base-300 text-base-content/40">not sold</span>';
 
     const price = row.price ? esc(row.price) : '—';
     const action = row.link && row.status !== 'checking'
-      ? `<a class="link link-primary text-xs" href="${esc(row.link)}" target="_blank" rel="noopener noreferrer">open ↗</a>`
+      ? `<a class="btn btn-ghost btn-xs text-primary" href="${esc(row.link)}" target="_blank" rel="noopener noreferrer">open ↗</a>`
       : '';
 
     const info = closureFor(row.region);
@@ -179,14 +187,16 @@ export function renderRecent(container, items, onPick, onClear) {
   for (const item of items) {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'flex items-center gap-3 rounded-box border border-white/5 bg-base-200 p-2 text-left transition hover:border-white/15 hover:bg-base-300/60';
+    button.className = 'flex items-center gap-3 rounded-box border border-white/10 bg-base-200 p-2.5 text-left transition hover:border-primary/40 hover:bg-base-300/70';
     button.innerHTML = `
-      ${item.image
-        ? `<img class="h-10 w-10 shrink-0 rounded object-cover" src="${esc(item.image)}" alt="" loading="lazy" referrerpolicy="no-referrer">`
-        : '<span class="h-10 w-10 shrink-0 rounded bg-base-300"></span>'}
+      <div class="avatar shrink-0">
+        <div class="h-10 w-10 rounded-lg bg-base-300 ring-1 ring-white/10">
+          ${item.image ? `<img src="${esc(item.image)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}
+        </div>
+      </div>
       <span class="min-w-0">
         <strong class="block truncate text-sm font-medium">${esc(item.name)}</strong>
-        <small class="block truncate text-[11px] text-base-content/45">${esc(item.region)} · ${esc(item.price || '')}</small>
+        <small class="block truncate text-[11px] text-base-content/50">${esc(item.region)} · ${esc(item.price || '')}</small>
       </span>`;
     button.addEventListener('click', () => onPick(item));
     container.appendChild(button);
