@@ -147,7 +147,7 @@ async function crawlRegion(region, seedNames) {
 }
 
 async function main() {
-  const rows = await loadRows();
+  let rows = await loadRows();
   const usVocabulary = tokens(rows.filter((r) => r[3] === 'US').map((r) => r[1]));
 
   for (const region of REGIONS) {

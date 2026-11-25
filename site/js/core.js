@@ -72,7 +72,7 @@ function homeRegion(sku) {
   const s = String(sku ?? '').toUpperCase();
   const prefix = s.slice(0, 2);
   if (prefix.startsWith('E')) return ok('GB');   // EP, ET (European trial), ES (Europe)
-  if (prefix === 'JP' || prefix === 'IP') return ok('JP'); // IP = Sony Japan torne
+  if (prefix === 'JP' || prefix === 'IP' || prefix === 'JB') return ok('JP'); // IP = Sony Japan torne
   if (prefix === 'HP') return ok('HK');
   return ok('US');
 }
@@ -118,6 +118,7 @@ export function isContentId(value) {
 /** The cart deep-link Sony's own store uses. */
 function cartLink(sku) {
   const clean = String(sku ?? '').trim();
+  if (!clean) return ok('');
   return ok(`${CHECKOUT}/${encodeURIComponent(clean)}?clientId=${CLIENT_ID}`);
 }
 

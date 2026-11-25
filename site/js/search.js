@@ -1,7 +1,7 @@
 // Live search: ask Sony's own search for avatars matching a name.
 
 import { core } from './core.js';
-import { REGIONS } from './catalog.js';
+import { REGIONS, cachedFetch } from './catalog.js';
 
 const SEARCH = 'https://commerce1.api.np.km.playstation.net/store/api/chihiro/00_09_000/search';
 
@@ -53,9 +53,12 @@ async function search(start) {
   const query = state.query.replace(/[/\\?]+/g, ' ').trim();
   const url = `${SEARCH}/${state.region}/${lang}/19/${encodeURIComponent(query)}`
     + `?top_category=avatar&start=${start}`;
-  const res = await fetch(url, { headers: { Accept: 'application/json' } });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
+  try {
+    return await cachedFetch(url);
+  } catch (error) {
+    if (error.kind === 'notSold') return { total_results: 0, links: [] };
+    throw new Error(error.payload?.message || error.message);
+  }
 }
 
 function card(item) {
@@ -127,22 +130,21 @@ async function load(reset) {
     if (seq !== state.seq) return;
     state.total = data.total_results || 0;
 
-    const items = (data.links || []).filter((i) => i.top_category === 'avatar' && i.id);
+    const rawLinks = data.links || [];
+    const items = rawLinks.filter((i) => i.top_category === 'avatar' && i.id);
     const frag = document.createDocumentFragment();
-    let added = 0;
     for (const item of items) {
       if (state.seen.has(item.id)) continue;
       state.seen.add(item.id);
       frag.appendChild(card(item));
-      added += 1;
     }
     el.results.appendChild(frag);
-    state.shown += items.length;
+    state.shown += rawLinks.length;
 
-    el.status.textContent = state.total
+    el.status.textContent = state.seen.size
       ? `${state.total.toLocaleString()} result${state.total === 1 ? '' : 's'} in ${state.region} — showing ${state.seen.size}`
       : `Nothing called “${state.query}” in ${state.region}. Try another store or spelling.`;
-    el.more.classList.toggle('hidden', !(state.total > state.seen.size && items.length === 20));
+    el.more.classList.toggle('hidden', !(state.total > state.shown && rawLinks.length === 20));
   } catch (error) {
     if (seq === state.seq) el.status.textContent = `Search failed: ${error.message}`;
   } finally {

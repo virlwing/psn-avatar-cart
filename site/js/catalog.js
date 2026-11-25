@@ -148,7 +148,7 @@ async function requestJson(url, attempt = 0) {
   }
 }
 
-function cachedFetch(url) {
+export function cachedFetch(url) {
   const hit = cacheGet(url);
   if (hit) {
     return hit.notSold
@@ -271,6 +271,7 @@ export async function resolveInput(rawInput, region) {
       const data = await fetchCatalog(twin.sku, region);
       const card = toCard(data, region, {
         baseSku: twin.sku,
+        querySku: base,
         source,
         game,
         hash,
@@ -307,11 +308,9 @@ async function findTwin(base, home, targetRegion, knownName) {
   const lang = REGION_LANG[targetRegion] || 'en';
   const query = sourceName.replace(/[/\\?]+/g, ' ').trim();
   try {
-    const response = await fetch(
+    payload = await cachedFetch(
       `${SEARCH}/${targetRegion}/${lang}/19/${encodeURIComponent(query)}?platform=ps3`
     );
-    if (!response.ok) return null;
-    payload = await response.json();
   } catch {
     return null;
   }

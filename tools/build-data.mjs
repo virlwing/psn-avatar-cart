@@ -11,7 +11,6 @@
  *   site/data/browse-catalog.tsv   one row per SKU, regions collapsed
  *   site/data/all-skus.txt         union of everything
  *   site/data/archive.tsv          hashes that are sold in no store
- *   README data table              counts, so they cannot drift
  *
  *   node tools/build-data.mjs          # rebuild
  *   node tools/build-data.mjs --check  # fail if anything is stale

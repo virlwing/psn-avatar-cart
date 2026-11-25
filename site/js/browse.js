@@ -2,7 +2,7 @@
 // on the main lookup, where one item is resolved rather than hundreds listed.
 
 import { core } from './core.js';
-import { REGIONS } from './catalog.js';
+import { REGIONS, isRegion } from './catalog.js';
 
 const CATALOG_URL = 'data/browse-catalog.tsv?v=__V__';
 const PAGE = 48;
@@ -163,7 +163,8 @@ async function boot() {
   }
   el.lede.textContent = `${state.rows.length.toLocaleString()} listings, each one a real product ID from the PlayStation Store.`;
   const params = new URLSearchParams(location.search);
-  if (params.get('region')) state.region = params.get('region').toUpperCase();
+  const r = (params.get('region') || '').toUpperCase();
+  if (isRegion(r)) state.region = r;
   if (params.get('q')) { el.q.value = params.get('q'); state.query = params.get('q'); }
   renderRegions();
   apply();
