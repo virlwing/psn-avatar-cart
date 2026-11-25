@@ -48,5 +48,8 @@ jobs:
         with:
           path: site
 
+      - name: Wait for artifact metadata propagation
+        run: sleep 5
+
       - id: deployment
         uses: actions/deploy-pages@v4
