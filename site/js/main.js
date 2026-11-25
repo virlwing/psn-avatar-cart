@@ -1,7 +1,6 @@
 // Wiring: state, events, URL permalinks, recent lookups.
 
 import { core, ERR } from './core.js';
-import { randomSku } from './example.js';
 import {
   REGIONS, LookupError, isRegion, loadIndex, resolveInput, availability, cardFromRegion,
   prefetch, fetchItem as catalogFetchItem,
@@ -75,6 +74,7 @@ function paintRecent() {
       el.input.value = item.input;
       state.region = item.region;
       renderChips(el.chips, REGIONS, state.region, pickRegion);
+      renderCountdown(el.countdown, state.region);
       run(item.input, item.region);
     }, () => {
       state.recent = [];
@@ -243,6 +243,8 @@ async function run(rawInput, region) {
           const card = await cardFromRegion(elsewhere.sku, elsewhere.region, {
             source: `Listed in ${elsewhere.region}`,
             hash: error.payload.hash || null,
+            querySku: error.payload.base,
+            queryName: sourceName,
           });
           state.card = card;
           renderCard(el.card, card, `Not sold in ${region} — showing the ${elsewhere.region} listing.`, {
@@ -290,8 +292,9 @@ let availabilityRun = 0;
 
 function startAvailability(card, rawInput, region) {
   const runId = ++availabilityRun;
-  const base = core.stripVariant(card.baseSku).value;
+  const base = core.stripVariant(card.querySku || card.baseSku).value;
   const home = core.homeRegion(base).value;
+  const sourceName = card.queryName || card.twinOf || card.name;
 
   state.rows = REGIONS.map((r) => ({ region: r.code, status: 'checking' }));
   el.regions.classList.remove('hidden');
@@ -308,7 +311,7 @@ function startAvailability(card, rawInput, region) {
     el.regionsSummary.textContent = `${done}/${REGIONS.length} checked · ${sold} selling`;
   };
 
-  availability(base, card.name, home, update).catch(() => {
+  availability(base, sourceName, home, update).catch(() => {
     if (runId === availabilityRun) el.regionsSummary.textContent = 'availability check failed';
   });
 }
@@ -436,16 +439,6 @@ el.permalinkCopy.addEventListener('click', async () => {
   el.permalinkCopy.textContent = ok ? 'Copied ✓' : 'Copy failed';
   setTimeout(() => { el.permalinkCopy.textContent = 'Copy'; }, 1600);
 });
-
-const example = document.getElementById('example');
-if (example) {
-  example.addEventListener('click', async () => {
-    const sku = await randomSku();
-    if (!sku) return;
-    el.input.value = sku;
-    run(sku, state.region);
-  });
-}
 
 /* ---------------------------------------------------------------- boot */
 

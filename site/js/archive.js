@@ -144,7 +144,8 @@ async function boot() {
   }
   el.lede.textContent = `${state.rows.length.toLocaleString()} avatars we can name by hash that no longer exist in any of the 14 stores.`;
   const params = new URLSearchParams(location.search);
-  if (params.get('filter')) state.filter = params.get('filter');
+  const f = params.get('filter');
+  if (f && FILTERS.some((item) => item.id === f)) state.filter = f;
   if (params.get('q')) { el.q.value = params.get('q'); state.query = params.get('q'); }
   renderFilters();
   apply();
