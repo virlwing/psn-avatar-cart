@@ -11,15 +11,20 @@
     <link rel="stylesheet" href="styles.css?v=__V__" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>" />
   </head>
-  <body class="min-h-dvh bg-base-100 font-sans text-base-content antialiased">
-    <header class="sticky top-0 z-30 border-b border-white/5 bg-black/75 backdrop-blur">
-      <div class="mx-auto flex max-w-6xl items-center gap-3 px-4 py-2.5">
-        <a class="btn btn-ghost btn-sm inline-flex shrink-0 items-center justify-center px-1.5 pt-[3px] font-display text-[11px] leading-none tracking-wide sm:px-3 sm:text-[13px]" href="./">Home</a>
-        <nav class="ml-auto flex min-w-0 items-center gap-0.5 overflow-x-auto" aria-label="Sections">
-
-          <a class="btn btn-ghost btn-sm inline-flex shrink-0 items-center justify-center px-1.5 pt-[3px] font-display text-[11px] leading-none tracking-wide sm:px-3 sm:text-[13px]" href="search.html">Search</a>
-          <a class="btn btn-ghost btn-sm inline-flex shrink-0 items-center justify-center px-1.5 pt-[3px] font-display text-[11px] leading-none tracking-wide sm:px-3 sm:text-[13px] btn-active" href="catalog.html">Catalogue</a>
-          <a class="btn btn-ghost btn-sm inline-flex shrink-0 items-center justify-center px-1.5 pt-[3px] font-display text-[11px] leading-none tracking-wide sm:px-3 sm:text-[13px]" href="archive.html">Delisted</a>
+  <body class="min-h-dvh bg-base-100 font-sans text-base-content antialiased selection:bg-primary/30 selection:text-white">
+    <header class="sticky top-0 z-30 border-b border-white/10 bg-base-100/80 backdrop-blur-md">
+      <div class="navbar mx-auto min-h-14 max-w-6xl px-4">
+        <div class="navbar-start gap-2">
+          <a class="btn btn-ghost btn-sm gap-2 px-2 font-display text-xs tracking-wider sm:text-sm" href="./">
+            <span class="inline-block h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_#4b7bf5]"></span>
+            PS3 Avatars
+          </a>
+        </div>
+        <nav class="navbar-end gap-1" aria-label="Sections">
+          <a class="btn btn-ghost btn-sm font-display text-[11px] tracking-wide sm:text-xs" href="./">Home</a>
+          <a class="btn btn-ghost btn-sm font-display text-[11px] tracking-wide sm:text-xs" href="search.html">Search</a>
+          <a class="btn btn-primary btn-sm font-display text-[11px] tracking-wide sm:text-xs" href="catalog.html">Catalogue</a>
+          <a class="btn btn-ghost btn-sm font-display text-[11px] tracking-wide sm:text-xs" href="archive.html">Delisted</a>
           <a class="btn btn-ghost btn-sm btn-circle" href="https://github.com/virlwing/psn-avatar-cart" target="_blank" rel="noopener noreferrer" aria-label="Source code on GitHub">
             <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
           </a>
@@ -29,26 +34,27 @@
 
     <main id="app" class="mx-auto flex max-w-6xl flex-col gap-5 px-4 pb-16 pt-8">
       <section class="flex flex-col gap-2">
-        <h1 class="font-display text-4xl leading-none">Catalogue</h1>
-        <p id="lede" class="text-sm text-base-content/65">Loading the catalogue…</p>
+        <span class="badge badge-primary badge-outline badge-sm w-fit font-mono uppercase tracking-wider">Merged Index</span>
+        <h1 class="font-display text-4xl leading-none tracking-tight">Catalogue</h1>
+        <p id="lede" class="text-sm text-base-content/70">Loading the catalogue…</p>
       </section>
 
-      <section class="card border border-white/5 bg-base-200 shadow-xl">
-        <div class="card-body gap-3">
-          <div class="flex flex-col gap-2 sm:flex-row">
+      <section class="card border border-white/10 bg-base-200 shadow-2xl">
+        <div class="card-body gap-4 p-5 sm:p-6">
+          <div class="join w-full">
             <input id="q" type="search" placeholder="Search by name or SKU…" autocomplete="off" spellcheck="false"
-                   class="input input-bordered w-full text-sm" />
-            <button id="clear" class="btn btn-ghost" type="button">Clear</button>
+                   class="input input-bordered join-item w-full bg-base-100 text-sm focus:input-primary" />
+            <button id="clear" class="btn btn-outline join-item border-white/15" type="button">Clear</button>
           </div>
-          <div id="regions" class="flex flex-wrap gap-1" role="group" aria-label="Filter by region"></div>
-          <p id="count" class="text-xs text-base-content/55"></p>
+          <div id="regions" class="flex flex-wrap gap-1.5 rounded-box border border-white/5 bg-base-100/50 p-2" role="group" aria-label="Filter by region"></div>
+          <p id="count" class="text-xs font-mono text-base-content/60"></p>
         </div>
       </section>
 
       <section id="results" class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite"></section>
 
       <div class="flex justify-center">
-        <button id="more" class="btn btn-ghost hidden" type="button">Load more</button>
+        <button id="more" class="btn btn-outline btn-primary btn-sm hidden" type="button">Load more</button>
       </div>
 
       <footer class="flex flex-col gap-2 border-t border-white/5 pt-6 text-xs leading-relaxed text-base-content/45">
