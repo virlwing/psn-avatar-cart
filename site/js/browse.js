@@ -73,21 +73,19 @@ function renderMore() {
 
 function card(row) {
   const article = document.createElement('article');
-  article.className = 'card card-compact border border-white/10 bg-base-200 shadow-md transition hover:border-primary/40';
+  article.className = 'card border border-white/5 bg-base-200 transition hover:border-white/15';
   const link = core.cartLink(row.sku).value || '#';
-  const regionBadges = row.regions.slice(0, 6).map((r) => `<span class="badge badge-ghost badge-xs font-mono">${esc(r)}</span>`).join('');
-  const extraRegions = row.regions.length > 6 ? `<span class="badge badge-ghost badge-xs font-mono">+${row.regions.length - 6}</span>` : '';
   article.innerHTML = `
-    <div class="card-body gap-2.5 p-4">
+    <div class="card-body gap-2 p-4">
       <h3 class="line-clamp-2 min-h-[2.4rem] text-sm font-semibold leading-snug">${esc(row.name || '(unnamed)')}</h3>
-      <div class="flex items-center justify-between gap-2">
-        <div class="flex flex-wrap gap-1">${regionBadges}${extraRegions}</div>
-        <span class="badge badge-primary badge-outline badge-sm shrink-0 font-mono">${esc(row.price || '—')}</span>
-      </div>
-      <code class="truncate font-mono text-[10px] text-base-content/40">${esc(row.sku)}</code>
-      <div class="card-actions mt-1 flex gap-2">
+      <p class="flex items-center justify-between gap-2 text-[11px] text-base-content/45">
+        <span class="truncate">${esc(row.regions.join(' '))}</span>
+        <span class="shrink-0 font-mono text-base-content/75">${esc(row.price || '—')}</span>
+      </p>
+      <code class="truncate font-mono text-[10px] text-base-content/35">${esc(row.sku)}</code>
+      <div class="mt-1 flex gap-2">
         <a class="btn btn-primary btn-xs flex-1" href="${esc(link)}" target="_blank" rel="noopener noreferrer">Add to cart ↗</a>
-        <button class="btn btn-outline btn-xs border-white/15" type="button">Copy link</button>
+        <button class="btn btn-ghost btn-xs" type="button">Copy link</button>
       </div>
     </div>`;
   article.querySelector('button').addEventListener('click', async (event) => {

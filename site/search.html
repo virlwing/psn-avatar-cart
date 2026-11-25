@@ -11,20 +11,15 @@
     <link rel="stylesheet" href="styles.css?v=__V__" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>" />
   </head>
-  <body class="min-h-dvh bg-base-100 font-sans text-base-content antialiased selection:bg-primary/30 selection:text-white">
-    <header class="sticky top-0 z-30 border-b border-white/10 bg-base-100/80 backdrop-blur-md">
-      <div class="navbar mx-auto min-h-14 max-w-5xl px-4">
-        <div class="navbar-start gap-2">
-          <a class="btn btn-ghost btn-sm gap-2 px-2 font-display text-xs tracking-wider sm:text-sm" href="./">
-            <span class="inline-block h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_#4b7bf5]"></span>
-            PS3 Avatars
-          </a>
-        </div>
-        <nav class="navbar-end gap-1" aria-label="Sections">
-          <a class="btn btn-ghost btn-sm font-display text-[11px] tracking-wide sm:text-xs" href="./">Home</a>
-          <a class="btn btn-primary btn-sm font-display text-[11px] tracking-wide sm:text-xs" href="search.html">Search</a>
-          <a class="btn btn-ghost btn-sm font-display text-[11px] tracking-wide sm:text-xs" href="catalog.html">Catalogue</a>
-          <a class="btn btn-ghost btn-sm font-display text-[11px] tracking-wide sm:text-xs" href="archive.html">Delisted</a>
+  <body class="min-h-dvh bg-base-100 font-sans text-base-content antialiased">
+    <header class="sticky top-0 z-30 border-b border-white/5 bg-black/75 backdrop-blur">
+      <div class="mx-auto flex max-w-5xl items-center gap-3 px-4 py-2.5">
+        <a class="btn btn-ghost btn-sm inline-flex shrink-0 items-center justify-center px-1.5 pt-[3px] font-display text-[11px] leading-none tracking-wide sm:px-3 sm:text-[13px]" href="./">Home</a>
+        <nav class="ml-auto flex min-w-0 items-center gap-0.5 overflow-x-auto" aria-label="Sections">
+
+          <a class="btn btn-ghost btn-sm inline-flex shrink-0 items-center justify-center px-1.5 pt-[3px] font-display text-[11px] leading-none tracking-wide sm:px-3 sm:text-[13px] btn-active" href="search.html">Search</a>
+          <a class="btn btn-ghost btn-sm inline-flex shrink-0 items-center justify-center px-1.5 pt-[3px] font-display text-[11px] leading-none tracking-wide sm:px-3 sm:text-[13px]" href="catalog.html">Catalogue</a>
+          <a class="btn btn-ghost btn-sm inline-flex shrink-0 items-center justify-center px-1.5 pt-[3px] font-display text-[11px] leading-none tracking-wide sm:px-3 sm:text-[13px]" href="archive.html">Delisted</a>
           <a class="btn btn-ghost btn-sm btn-circle" href="https://github.com/virlwing/psn-avatar-cart"
              target="_blank" rel="noopener noreferrer" aria-label="Source code on GitHub" title="Source on GitHub">
             <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" focusable="false">
@@ -43,31 +38,30 @@
 
     <main id="app" class="mx-auto flex max-w-5xl flex-col gap-5 px-4 pb-16 pt-8">
       <section class="flex flex-col gap-2">
-        <span class="badge badge-primary badge-outline badge-sm w-fit font-mono uppercase tracking-wider">Live Sony API</span>
-        <h1 class="font-display text-4xl leading-none tracking-tight">Search</h1>
-        <p class="max-w-2xl text-sm text-base-content/70">
+        <h1 class="font-display text-4xl leading-none">Search</h1>
+        <p class="max-w-2xl text-sm text-base-content/65">
           Type an avatar's name and the query goes straight to the PlayStation Store — no index of ours in
           the middle. Pick the region whose store you want to search.
         </p>
       </section>
 
-      <section class="card border border-white/10 bg-base-200 shadow-2xl">
-        <div class="card-body gap-4 p-5 sm:p-6">
-          <div class="join w-full">
+      <section class="card border border-white/5 bg-base-200 shadow-xl">
+        <div class="card-body gap-3">
+          <div class="flex flex-col gap-2 sm:flex-row">
             <input id="q" type="search" placeholder="e.g. shadow wolf, ada vampire, toro…"
                    autocomplete="off" spellcheck="false"
-                   class="input input-bordered join-item w-full bg-base-100 text-sm focus:input-primary" />
-            <button id="clear" class="btn btn-outline join-item border-white/15" type="button">Clear</button>
+                   class="input input-bordered w-full text-sm" />
+            <button id="clear" class="btn btn-ghost" type="button">Clear</button>
           </div>
-          <div id="regions" class="flex flex-wrap gap-1.5 rounded-box border border-white/5 bg-base-100/50 p-2" role="group" aria-label="Store region"></div>
-          <p id="status" class="text-xs font-mono text-base-content/60">Pick a store and type a name.</p>
+          <div id="regions" class="flex flex-wrap gap-1" role="group" aria-label="Store region"></div>
+          <p id="status" class="text-xs text-base-content/55">Pick a store and type a name.</p>
         </div>
       </section>
 
-      <section id="results" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite"></section>
+      <section id="results" class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite"></section>
 
       <div class="flex justify-center">
-        <button id="more" class="btn btn-outline btn-primary btn-sm hidden" type="button">Load more</button>
+        <button id="more" class="btn btn-ghost hidden" type="button">Load more</button>
       </div>
 
       <footer class="flex flex-col gap-2 border-t border-white/5 pt-6 text-xs leading-relaxed text-base-content/45">
